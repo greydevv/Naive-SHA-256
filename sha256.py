@@ -1,4 +1,3 @@
-from hashlib import sha256
 from bitops import BitArray, compress, lsig_0, lsig_1
 from const import H, K
 

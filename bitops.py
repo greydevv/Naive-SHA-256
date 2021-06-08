@@ -1,5 +1,5 @@
 from functools import reduce
-from _ascii import ASCII, HEX
+from tables import ASCII, HEX
 from const import H, K
 
 class UBitArray:
