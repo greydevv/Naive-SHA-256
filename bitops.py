@@ -12,14 +12,6 @@ class BitArray:
         bits = prepad(bits)
         return cls(bits)
 
-    @classmethod
-    def fromstr(cls, string):
-        bits = []
-        for char in string:
-            char_bits = binary(ASCII[char])
-            bits.extend(prepad(char_bits))
-        return cls(bits)
-
     def toint(self):
         # create backwards range for powers
         pows = range(len(self)-1,-1,-1)

@@ -4,6 +4,7 @@ from const import H, K
 
 def sha256(msg):
     # create padded message block (512 bits)
+    # below line is broke, fromstr is deprecated 
     msg_block = BitArray.fromstr(msg).pad()
 
     # break into 32 bit words for message schedule
