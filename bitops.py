@@ -29,12 +29,6 @@ class UBitArray:
 
         return result
 
-    def pad(self):
-        bit_len = binary(len(self))
-        padding = [1] + [0]*(447-len(self)) + [0]*(64-len(bit_len)) + bit_len
-        result = self.bits + padding
-        return self.__class__(result)
-    
     def rshift(self, n):
         # chop last n bits, prepend n '0's
         result = [0]*n + self.bits[:-n]
