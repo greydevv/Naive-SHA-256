@@ -4,7 +4,21 @@ from const import H, K
 
 class UBitArray:
     def __init__(self, bits):
-        self.bits = bits
+        if len(bits) % 8 != 0:
+            bits = [0]*(8 - (len(bits) % 8)) + bits
+
+        """
+        // TODO (needs research/testing) - chop off insignificant leading '0's?
+        """
+        chunks = [bits[i:i+8] for i in range(0, len(bits)-8, 8)]
+        cuts = 0
+        for chunk in chunks:
+            if chunk.count(1) == 0:
+                cuts += 1
+            else:
+                break
+
+        self.bits = bits[cuts*8:]
 
     @classmethod
     def fromint(cls, n):
@@ -30,9 +44,12 @@ class UBitArray:
         return result
 
     def rshift(self, n):
-        # chop last n bits, prepend n '0's
-        result = [0]*n + self.bits[:-n]
-        return self.__class__(result)
+        if n >= len(self):
+            return self.__class__([0]*len(self))
+        else:
+            # chop last n bits, prepend n '0's
+            result = [0]*n + self.bits[:-n]
+            return self.__class__(result)
     
     def rotr(self, n):
         n = n % len(self)
@@ -41,35 +58,45 @@ class UBitArray:
         return self.__class__(result)
 
     def __xor__(self, other):
-        # assume that other is UBitArray and has same length
+        a,b = homogenize(self.bits, other.bits)
+        
         result = []
-        for a,b in zip(self, other):
-            result.append((a + b) % 2)
+        for x,y in zip(a, b):
+            result.append((x + y) % 2)
 
         return self.__class__(result)
 
     def __add__(self, other):
-        # assume that other is UBitArray and has same length
-        i = len(self)-1
-        result = []
+        a,b = homogenize(self.bits, other.bits)
+
+        i = len(a)-1
         carry = False
+        result = []
         while i >= 0:
-            a,b = self[i], other[i]
-            if a and b:
+            x,y = a[i], b[i]
+            if x and y:
                 result.append(1 if carry else 0)
                 carry = True
-            elif a or b:
+            elif x or y:
                 result.append(0 if carry else 1)
             else:
                 result.append(1 if carry else 0)
                 carry = False
+
             i -= 1
-        return self.__class__(result[::-1]) 
+
+        return self.__class__(result[::-1])
+
+    def __eq__(self, other):
+        # assume that other is UBitArray
+        return self.bits == other.bits
 
     def __getitem__(self, i):
         if isinstance(i, int):
             return self.bits[i]
         elif isinstance(i, slice):
+            if not self.bits[i]:
+                raise ValueError(f"slice results in an empty {self.__class__.__name__}")
             return self.__class__(self.bits[i])
 
     def __iter__(self):
@@ -86,6 +113,16 @@ class UBitArray:
         bit_repr = " ".join([str(bit) for bit in self.bits])
         return f"{cls_name}[{bit_repr}]"
 
+def homogenize(a, b):
+    len_a, len_b = len(a), len(b)
+    if len_a > len_b:
+        diff = len_a-len_b
+        b = [0]*diff + b
+    elif len_b > len_a:
+        diff = len_b-len_a
+        a = [0]*diff + a
+
+    return a,b
 
 def prepad(bits):
     rem = len(bits) % 8
@@ -167,8 +204,6 @@ def compress(words):
 
     hash_values = [s0+s1 for s0,s1 in zip(orig_state, (a,b,c,d,e,f,g,h))]
     return hash_values
-
-        
 
 
 
