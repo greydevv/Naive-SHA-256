@@ -12,7 +12,7 @@ def choice(a, b, c):
         result.append(y if model else z)
     return UBitArray32(result)
 
-def majority(*bit_arrs):
+def majority(a, b, c):
     result = []
     for bits in zip(*bit_arrs):
         result.append(max(bits, key=bits.count))
