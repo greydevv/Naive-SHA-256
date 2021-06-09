@@ -6,22 +6,28 @@ class UBitArray32:
     def __init__(self, bits):
         if not bits:
             raise ValueError(f"cannot create empty {self.__class__.__name__}")
-        if len(bits) < 32:
-            # pad with zeros to 32 bits
-            bits = [0]*(32-len(bits)) + bits
+        elif len(bits) > 32 and 1 in bits[0:-32]:
+            raise ValueError(f"maximum value of 4294967295 exceeded")
         elif len(bits) > 32:
             # only take first 32 bits
             bits = bits[-32:]
+        elif len(bits) < 32:
+            # pad with zeros to 32 bits
+            bits = [0]*(32-len(bits)) + bits
         
         self.bits = bits
 
     @classmethod
     def fromint(cls, n):
-        """
-        // TODO: handle negative numbers w/ two's complement.
-        """
-        bits = binary(n)
-        bits = prepad(bits)
+        if n > 4294967295:
+            raise ValueError(f"maximum value of 4292967295 exceeded")
+        elif n < 0:
+            bits = binary(n*-1)
+            bits = twos(prepad(bits))
+        else:
+            bits = binary(n)
+            bits = prepad(bits)
+
         return cls(bits)
 
     def toint(self):
@@ -56,22 +62,18 @@ class UBitArray32:
         return self.__class__(result)
 
     def __xor__(self, other):
-        a,b = homogenize(self.bits, other.bits)
-        
         result = []
-        for x,y in zip(a, b):
+        for x,y in zip(self.bits, other.bits):
             result.append((x + y) % 2)
 
         return self.__class__(result)
 
     def __add__(self, other):
-        a,b = homogenize(self.bits, other.bits)
-
-        i = len(a)-1
+        i = len(self)-1
         carry = False
         result = []
         while i >= 0:
-            x,y = a[i], b[i]
+            x,y = self[i], other[i]
             if x and y:
                 result.append(1 if carry else 0)
                 carry = True
@@ -111,17 +113,6 @@ class UBitArray32:
         bit_repr = " ".join([str(bit) for bit in self.bits])
         return f"{cls_name}[{bit_repr}]"
 
-def homogenize(a, b):
-    len_a, len_b = len(a), len(b)
-    if len_a > len_b:
-        diff = len_a-len_b
-        b = [0]*diff + b
-    elif len_b > len_a:
-        diff = len_b-len_a
-        a = [0]*diff + a
-
-    return a,b
-
 def prepad(bits):
     rem = len(bits) % 32
     if rem > 0:
@@ -129,10 +120,31 @@ def prepad(bits):
     
     return bits
 
+def add(a,b):
+    # bits added from left to right, start at rightmost index
+    i = len(a)-1
+    carry = False
+    result = []
+    while i >= 0:
+        x,y = a[i], b[i]
+        if x and y:
+            result.append(1 if carry else 0)
+            carry = True
+        elif x or y:
+            result.append(0 if carry else 1)
+        else:
+            result.append(1 if carry else 0)
+            carry = False
+
+        i -= 1
+
+    return result[::-1]
+
 def twos(bits):
     # flip bits
     bits = [1-bit for bit in bits]
-    # twos complement
+    other = [0]*(len(bits)-1) + [1]  
+    return add(bits, other)
 
 def binary(n):
     if n == 0:
@@ -147,7 +159,6 @@ def binary(n):
     return bit_arr[::-1]
 
 def xor(*bit_arrs):
-    # assume that there are > 2 arguments passed
     result = reduce(UBitArray32.__xor__, bit_arrs)
     return result
 
