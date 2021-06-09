@@ -1,4 +1,4 @@
-from sha256.core.ubitarray_32 import UBitArray32
+from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority
 import pytest
 
 def test___init___exceeding_max_value():
@@ -174,3 +174,27 @@ def test___repr__():
     result = repr(UBitArray32.fromint(10))
     expected = "UBitArray32[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0]"
     assert result == expected
+
+def test_xor():
+    a = UBitArray32([0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,1])
+    b = UBitArray32([0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1])
+    c = UBitArray32([0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1])
+    result = xor(a,b,c)
+    expected = [0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,0,1,1,0,0,1,0,1]
+    assert result.bits == expected
+
+def test_choice():
+    a = UBitArray32([0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,1])
+    b = UBitArray32([0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1])
+    c = UBitArray32([0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1])
+    result = choice(a,b,c)
+    expected = [0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1]
+    assert result.bits == expected
+
+def test_majority():
+    a = UBitArray32([0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,1])
+    b = UBitArray32([0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1])
+    c = UBitArray32([0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1])
+    result = majority(a,b,c)
+    expected = [0,0,0,0,1,0,0,0,1,1,1,0,0,1,0,1,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1]
+    assert result.bits == expected
