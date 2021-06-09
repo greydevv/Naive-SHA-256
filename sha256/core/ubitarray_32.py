@@ -1,5 +1,6 @@
 from sha256.core.bitops import binary, prepad, twos
 from sha256.const.tables import HEX
+from functools import reduce
 
 def xor(*bit_arrs):
     result = reduce(UBitArray32.__xor__, bit_arrs)
@@ -127,5 +128,3 @@ class UBitArray32:
         cls_name = self.__class__.__name__
         bit_repr = " ".join([str(bit) for bit in self.bits])
         return f"{cls_name}[{bit_repr}]"
-
-
