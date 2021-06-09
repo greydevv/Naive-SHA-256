@@ -51,6 +51,10 @@ def test_from_int_with_negative_int():
     expected = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0]
     assert result.bits == expected
 
+def test_from_int_exceeding_max_value():
+    with pytest.raises(ValueError, match="maximum value of 4294967295 exceeded"):
+        UBitArray32.fromint(4294967296)
+
 def test_toint():
     result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0]).toint()
     expected = 10

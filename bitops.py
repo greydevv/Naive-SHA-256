@@ -20,7 +20,7 @@ class UBitArray32:
     @classmethod
     def fromint(cls, n):
         if n > 4294967295:
-            raise ValueError(f"maximum value of 4292967295 exceeded")
+            raise ValueError(f"maximum value of 4294967295 exceeded")
         elif n < 0:
             bits = binary(n*-1)
             bits = twos(prepad(bits))
