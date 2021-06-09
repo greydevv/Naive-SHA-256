@@ -1,4 +1,10 @@
+# OSX
 .DS_Store
+
+# Python Compiled
 __pycache__/
 *.py[cod]
 *$py.class
+
+# pytest
+.pytest_cache/
