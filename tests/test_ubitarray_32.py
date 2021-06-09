@@ -1,4 +1,4 @@
-from bitops import UBitArray32
+from sha256.ubitarray_32 import UBitArray32
 import pytest
 
 def test___init___exceeding_max_value():

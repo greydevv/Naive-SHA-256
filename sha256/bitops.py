@@ -1,6 +1,6 @@
+from sha256.const.tables import ASCII
+from sha256.const import H, K
 from functools import reduce
-from tables import ASCII, HEX
-from const import H, K
 
 def binary(n):
     if n == 0:
