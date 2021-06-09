@@ -2,15 +2,15 @@ from functools import reduce
 from tables import ASCII, HEX
 from const import H, K
 
-class UBitArray:
+class UBitArray32:
     def __init__(self, bits):
-        if len(bits) % 8 != 0:
-            bits = [0]*(8 - (len(bits) % 8)) + bits
+        if len(bits) % 32 != 0:
+            bits = [0]*(32 - (len(bits) % 32)) + bits
 
         """
         // TODO (needs research/testing) - chop off insignificant leading '0's?
         """
-        chunks = [bits[i:i+8] for i in range(0, len(bits)-8, 8)]
+        chunks = [bits[i:i+32] for i in range(0, len(bits)-32, 32)]
         cuts = 0
         for chunk in chunks:
             if chunk.count(1) == 0:
@@ -18,7 +18,7 @@ class UBitArray:
             else:
                 break
 
-        self.bits = bits[cuts*8:]
+        self.bits = bits[cuts*32:]
 
     @classmethod
     def fromint(cls, n):
@@ -88,7 +88,7 @@ class UBitArray:
         return self.__class__(result[::-1])
 
     def __eq__(self, other):
-        # assume that other is UBitArray
+        # assume that other is UBitArray32
         return self.bits == other.bits
 
     def __getitem__(self, i):
@@ -125,9 +125,9 @@ def homogenize(a, b):
     return a,b
 
 def prepad(bits):
-    rem = len(bits) % 8
+    rem = len(bits) % 32
     if rem > 0:
-        bits = [0]*(8-rem) + bits
+        bits = [0]*(32-rem) + bits
     
     return bits
 
@@ -150,51 +150,51 @@ def binary(n):
 
 def xor(*bit_arrs):
     # assume that there are > 2 arguments passed
-    result = reduce(UBitArray.__xor__, bit_arrs)
+    result = reduce(UBitArray32.__xor__, bit_arrs)
     return result
 
 def choice(a, b, c):
     result = []
     for model, y, z in zip(a, b, c):
         result.append(y if model else z)
-    return UBitArray(result)
+    return UBitArray32(result)
 
 def majority(*bit_arrs):
     result = []
     for bits in zip(*bit_arrs):
         result.append(max(bits, key=bits.count))
-    return UBitArray(result)
+    return UBitArray32(result)
 
 def lsig_0(bit_arr):
     x = bit_arr.rotr(7)
     y = bit_arr.rotr(18)
     z = bit_arr.rshift(3)
-    return UBitArray(xor(x,y,z))
+    return UBitArray32(xor(x,y,z))
 
 def lsig_1(bit_arr):
     x = bit_arr.rotr(17)
     y = bit_arr.rotr(19)
     z = bit_arr.rshift(10)
-    return UBitArray(xor(x,y,z))
+    return UBitArray32(xor(x,y,z))
 
 def usig_0(bit_arr):
     x = bit_arr.rotr(2)
     y = bit_arr.rotr(13)
     z = bit_arr.rotr(22)
-    return UBitArray(xor(x,y,z))
+    return UBitArray32(xor(x,y,z))
 
 def usig_1(bit_arr):
     x = bit_arr.rotr(6)
     y = bit_arr.rotr(11)
     z = bit_arr.rotr(25)
-    return UBitArray(xor(x,y,z))
+    return UBitArray32(xor(x,y,z))
 
 def compress(words):
-    orig_state = tuple(UBitArray.fromint(h) for h in H)
+    orig_state = tuple(UBitArray32.fromint(h) for h in H)
     a,b,c,d,e,f,g,h = orig_state
     import os
     for w,k in zip(words, K):
-        k = UBitArray.fromint(k)
+        k = UBitArray32.fromint(k)
         t0 = usig_1(e) + choice(e,f,g) + h + k + w
         t1 = usig_0(a) + majority(a,b,c)
         
