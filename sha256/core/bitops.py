@@ -13,10 +13,12 @@ def binary(n):
     
     return bit_arr[::-1]
 
-def prepad(bits):
-    rem = len(bits) % 32
+def prepad(bits, to=32):
+    if to == 0: return bits
+
+    rem = len(bits) % to
     if rem > 0:
-        bits = [0]*(32-rem) + bits
+        bits = [0]*(to-rem) + bits
     
     return bits
 
@@ -37,6 +39,8 @@ def add(a,b):
             carry = False
 
         i -= 1
+    if carry:
+        result.append(1)
 
     return result[::-1]
 

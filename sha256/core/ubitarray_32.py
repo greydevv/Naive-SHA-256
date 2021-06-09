@@ -1,5 +1,5 @@
+from sha256.core.bitops import binary, prepad, twos
 from sha256.const.tables import HEX
-from sha256.bitops import binary, prepad, twos
 
 def xor(*bit_arrs):
     result = reduce(UBitArray32.__xor__, bit_arrs)
