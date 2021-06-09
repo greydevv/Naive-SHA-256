@@ -4,24 +4,22 @@ from const import H, K
 
 class UBitArray32:
     def __init__(self, bits):
-        if len(bits) % 32 != 0:
-            bits = [0]*(32 - (len(bits) % 32)) + bits
-
-        """
-        // TODO (needs research/testing) - chop off insignificant leading '0's?
-        """
-        chunks = [bits[i:i+32] for i in range(0, len(bits)-32, 32)]
-        cuts = 0
-        for chunk in chunks:
-            if chunk.count(1) == 0:
-                cuts += 1
-            else:
-                break
-
-        self.bits = bits[cuts*32:]
+        if not bits:
+            raise ValueError(f"cannot create empty {self.__class__.__name__}")
+        if len(bits) < 32:
+            # pad with zeros to 32 bits
+            bits = [0]*(32-len(bits)) + bits
+        elif len(bits) > 32:
+            # only take first 32 bits
+            bits = bits[-32:]
+        
+        self.bits = bits
 
     @classmethod
     def fromint(cls, n):
+        """
+        // TODO: handle negative numbers w/ two's complement.
+        """
         bits = binary(n)
         bits = prepad(bits)
         return cls(bits)
@@ -96,7 +94,7 @@ class UBitArray32:
             return self.bits[i]
         elif isinstance(i, slice):
             if not self.bits[i]:
-                raise ValueError(f"slice results in an empty {self.__class__.__name__}")
+                raise ValueError(f"slice results in empty {self.__class__.__name__}")
             return self.__class__(self.bits[i])
 
     def __iter__(self):
