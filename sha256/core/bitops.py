@@ -24,10 +24,9 @@ def prepad(bits, to=32):
 
 def add(a,b):
     # bits added from left to right, start at rightmost index
-    i = len(a)-1
     carry = False
     result = []
-    while i >= 0:
+    for i in range(len(a)-1,-1,-1):
         x,y = a[i], b[i]
         if x and y:
             result.append(1 if carry else 0)
@@ -38,9 +37,7 @@ def add(a,b):
             result.append(1 if carry else 0)
             carry = False
 
-        i -= 1
-    if carry:
-        result.append(1)
+    if carry: result.append(1)
 
     return result[::-1]
 
