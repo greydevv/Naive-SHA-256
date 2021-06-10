@@ -2,6 +2,9 @@ from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority, lsig0, 
 import pytest
 
 def test___init___with_greater_than_32_bits():
+    # UBitArray32.__init__  should remove leadings bits if length of input
+    # bits exceeds 32
+
     result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0])
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
     assert result.bits == expected
@@ -42,7 +45,7 @@ def test_from_int_with_positive_int():
 
 def test_from_int_with_negative_int():
     result = UBitArray32.fromint(-24)
-    # -24 -> unsigned -> 4292967272
+    # -24 (signed) -> 4292967272 (unsigned)
     expected = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0]
     assert result.bits == expected
 
@@ -60,10 +63,6 @@ def test_toint():
     assert result == expected
 
 def test_tohex():
-    result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1]).tohex()
-    expected = "00000025"
-    assert result == expected
-
     result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,1,0,0,0,0,1,1,1,1,1]).tohex()
     expected = "0000ae1f"
     assert result == expected
@@ -79,7 +78,7 @@ def test_rshift():
     assert result.bits == expected
     
     # test with n outside of bounds
-    result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1]).rshift(20)
+    result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1]).rshift(46)
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     assert result.bits == expected
 
@@ -95,36 +94,25 @@ def test_rotr():
     assert result.bits == expected
 
 def test___xor___with_even_bit_lengths():
-    # 8 bits passed in, but becomes 32 in UBitArray.__init__
-    result = UBitArray32([1,0,0,0,1,1,0,1]) ^ UBitArray32([0,0,0,1,1,1,0,0])
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1])
+    b = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0])
+    result =  a ^ b
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1]
     assert result.bits == expected
 
-    result = UBitArray32([1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0]) ^ UBitArray32([1,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0])
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0])
+    b = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0])
+    result = a ^ b 
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,1,0,0,1,1,0,0,1,0]
     assert result.bits == expected
 
-def test___xor___with_uneven_bit_lengths():
-    result = UBitArray32([0,0,0,0,1,1,1,1]) ^ UBitArray32([0,0,0,1,1,1,0,1,1,0,1,1,0,0,0,1])
-    expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,1,1,1,1,1,0]
-    assert result.bits == expected
-
-def test___add___with_even_bit_lengths():
+def test___add__():
     result = UBitArray32.fromint(8) + UBitArray32.fromint(27)
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1]
     assert result.bits == expected
     
     result = UBitArray32.fromint(152) + UBitArray32.fromint(83)
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,0,1,1]
-    assert result.bits == expected
-
-def test___add___with_uneven_bit_lengths():
-    result = UBitArray32.fromint(359) + UBitArray32.fromint(1092)
-    expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,1,1]
-    assert result.bits == expected
-
-    result = UBitArray32.fromint(4329105) + UBitArray32.fromint(8773429)
-    expected = [0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1,0,1,1,1,0,0,0,1,1,0]
     assert result.bits == expected
 
 def test___eq___with_equal():
@@ -137,7 +125,7 @@ def test___eq___with_not_equal():
     expected = False
     assert result == expected
 
-def test___getitem___with_int_index():
+def test___getitem___with_integer_index():
     # integer index returns an int, either 1 or 0 (bit)
     a = UBitArray32.fromint(10)
     result = isinstance(a[0], int)
