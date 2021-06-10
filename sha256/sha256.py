@@ -7,6 +7,7 @@ def schedule(wds):
     for i in range(len(wds), 64):
         w = lsig1(wds[i-2]) + wds[i-7] + lsig0(wds[i-15]) + wds[i-16]
         wds.append(w)
+
     return wds
 
 def compress(wds, ctx=None):
@@ -18,7 +19,7 @@ def compress(wds, ctx=None):
     for i in range(64):
         t1 = usig1(e) + choice(e,f,g) + h + UBitArray32.fromint(K[i]) + wds[i]
         t2 = usig0(a) + majority(a,b,c)
-        # assign registers to previous (b = a, c = b, etc.)
+        # assign registers to previous (b=a, c=b, etc.)
         h = g
         g = f
         f = e
@@ -42,8 +43,9 @@ def compress(wds, ctx=None):
 
 def SHA256(data):
     msg = []
-    for ch in data:
-        chbin = prepad(binary(ASCII[ch]), to=8)
+    for e in data:
+        # convert chars to binary in 8-bit 
+        chbin = prepad(binary(ASCII[e]), to=8)
         msg.extend(chbin)
     
     # get length (in bits) of input
@@ -61,7 +63,7 @@ def SHA256(data):
         block = msg[i:i+512] 
         wds = [UBitArray32(block[i:i+32]) for i in range(0, 512, 32)]
         wds = schedule(wds)
-        # reset context for next block
+        # set context for next block
         ctx = compress(wds, ctx)
 
     return "".join(x.tohex() for x in ctx)
