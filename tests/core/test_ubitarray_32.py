@@ -1,11 +1,6 @@
 from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority, lsig0, lsig1, usig0, usig1
 import pytest
 
-def test___init___exceeding_max_value():
-    with pytest.raises(ValueError, match="maximum value of 4294967295 exceeded"):
-        # longer than 32 bits with a set bit, 1, in the excess (> 32) part
-        UBitArray32([1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
-
 def test___init___with_greater_than_32_bits():
     result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0])
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]

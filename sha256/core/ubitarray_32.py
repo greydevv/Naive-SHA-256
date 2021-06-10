@@ -1,4 +1,4 @@
-from sha256.core.bitops import binary, prepad, twos
+from sha256.core.bitops import binary, prepad, twos, add
 from sha256.const.tables import HEX
 from functools import reduce
 
@@ -46,8 +46,6 @@ class UBitArray32:
     def __init__(self, bits):
         if not bits:
             raise ValueError(f"cannot create empty {self.__class__.__name__}")
-        elif len(bits) > 32 and 1 in bits[0:-32]:
-            raise ValueError(f"maximum value of 4294967295 exceeded")
         elif len(bits) > 32:
             # only take first 32 bits
             bits = bits[-32:]
@@ -109,23 +107,7 @@ class UBitArray32:
         return self.__class__(result)
 
     def __add__(self, other):
-        i = len(self)-1
-        carry = False
-        result = []
-        while i >= 0:
-            x,y = self[i], other[i]
-            if x and y:
-                result.append(1 if carry else 0)
-                carry = True
-            elif x or y:
-                result.append(0 if carry else 1)
-            else:
-                result.append(1 if carry else 0)
-                carry = False
-
-            i -= 1
-
-        return self.__class__(result[::-1])
+        return self.__class__(add(self, other))
 
     def __eq__(self, other):
         # assume that other is UBitArray32
