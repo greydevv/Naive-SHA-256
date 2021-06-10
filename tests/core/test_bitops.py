@@ -30,6 +30,14 @@ def test_add():
     result = add([1,0,1,0,1,0,1,0], [1,1,0,0,1,1,0,0])
     expected = [1,0,1,1,1,0,1,1,0]
     assert result == expected
+    
+    result = add([1,0,0,1,1,1,0,0,1], [1,1,1,0,0,0,1,1,0])
+    expected = [1,0,1,1,1,1,1,1,1,1]
+    assert result == expected
+
+    result = add([0,0,1,1,1,0,1,0,0,1], [1,0,0,1,1,1,0,0,1,1])
+    expected = [1,1,0,1,0,1,1,1,0,0]
+    assert result == expected
 
 def test_twos():
     result = twos([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0])
