@@ -6,13 +6,13 @@ def xor(*bit_arrs):
     result = reduce(UBitArray32.__xor__, bit_arrs)
     return result
 
-def choice(a, b, c):
+def ch(a, b, c):
     result = []
     for model, y, z in zip(a, b, c):
         result.append(y if model else z)
     return UBitArray32(result)
 
-def majority(a, b, c):
+def maj(a, b, c):
     result = []
     for bits in zip(a,b,c):
         result.append(max(bits, key=bits.count))

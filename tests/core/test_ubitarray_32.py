@@ -1,4 +1,4 @@
-from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority, lsig0, lsig1, usig0, usig1
+from sha256.core.ubitarray_32 import UBitArray32, xor, ch, maj, lsig0, lsig1, usig0, usig1
 import pytest
 
 def test___init___with_greater_than_32_bits():
@@ -165,19 +165,19 @@ def test_xor():
     expected = [0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,0,1,1,0,0,1,0,1]
     assert result.bits == expected
 
-def test_choice():
+def test_ch():
     a = UBitArray32([0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,1])
     b = UBitArray32([0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1])
     c = UBitArray32([0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1])
-    result = choice(a,b,c)
+    result = ch(a,b,c)
     expected = [0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1]
     assert result.bits == expected
 
-def test_majority():
+def test_maj():
     a = UBitArray32([0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,1])
     b = UBitArray32([0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1])
     c = UBitArray32([0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1])
-    result = majority(a,b,c)
+    result = maj(a,b,c)
     expected = [0,0,0,0,1,0,0,0,1,1,1,0,0,1,0,1,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1]
     assert result.bits == expected
 

@@ -1,4 +1,4 @@
-from sha256.core.ubitarray_32 import UBitArray32, lsig0, lsig1, usig0, usig1, choice, majority
+from sha256.core.ubitarray_32 import UBitArray32, lsig0, lsig1, usig0, usig1, ch, maj
 from sha256.core.bitops import binary, prepad
 from sha256.const import H, K
 from sha256.const.tables import ASCII
@@ -17,8 +17,8 @@ def compress(wds, ctx=None):
     a,b,c,d,e,f,g,h = state
 
     for i in range(64):
-        t1 = usig1(e) + choice(e,f,g) + h + UBitArray32.fromint(K[i]) + wds[i]
-        t2 = usig0(a) + majority(a,b,c)
+        t1 = usig1(e) + ch(e,f,g) + h + UBitArray32.fromint(K[i]) + wds[i]
+        t2 = usig0(a) + maj(a,b,c)
         # assign registers to previous (b=a, c=b, etc.)
         h = g
         g = f
