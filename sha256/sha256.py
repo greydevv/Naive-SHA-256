@@ -1,22 +1,24 @@
 from sha256.core.ubitarray_32 import UBitArray32, lsig0, lsig1, usig0, usig1, choice, majority
-from sha256.core.bitops import binary,prepad
+from sha256.core.bitops import binary, prepad
 from sha256.const import H, K
 from sha256.const.tables import ASCII
 
-def schedule(words):
-    for i in range(len(words), 64):
-        w = lsig1(words[i-2]) + words[i-7] + lsig0(words[i-15]) + words[i-16]
-        words.append(w)
-    return words
+def schedule(wds):
+    for i in range(len(wds), 64):
+        w = lsig1(wds[i-2]) + wds[i-7] + lsig0(wds[i-15]) + wds[i-16]
+        wds.append(w)
+    return wds
 
-def compress(words, ctx=None):
-    # set inital states
+def compress(wds, ctx=None):
+    # set initial state registers
+    # if ctx is not supplied, use defined constants
     state = ctx or tuple(UBitArray32.fromint(h) for h in H)
     a,b,c,d,e,f,g,h = state
 
     for i in range(64):
-        t1 = usig1(e) + choice(e,f,g) + h + UBitArray32.fromint(K[i]) + words[i]
+        t1 = usig1(e) + choice(e,f,g) + h + UBitArray32.fromint(K[i]) + wds[i]
         t2 = usig0(a) + majority(a,b,c)
+        # assign registers to previous (b = a, c = b, etc.)
         h = g
         g = f
         f = e
@@ -25,7 +27,8 @@ def compress(words, ctx=None):
         c = b
         b = a
         a = t1 + t2
-        
+
+    # add new state to original state
     a += state[0]
     b += state[1]
     c += state[2]
@@ -37,32 +40,28 @@ def compress(words, ctx=None):
 
     return a,b,c,d,e,f,g,h
 
-def sha256(data):
+def SHA256(data):
     msg = []
     for ch in data:
-        _ord = ASCII[ch]
-        ch_bits = prepad(binary(_ord), to=8)
-        msg.extend(ch_bits)
+        chbin = prepad(binary(ASCII[ch]), to=8)
+        msg.extend(chbin)
     
-    datalen = binary(len(msg)) # what to do if the length of this is > 64 bits?
+    # get length (in bits) of input
+    datalen = binary(len(msg))
     if len(datalen) > 64:
         raise ValueError("input is too large")
-    
-    tail = [0]*(64-len(datalen)) + datalen # compose length of data in bits (64 bits)
+
+    # pad out message to factor of 512 (512-bit blocks)
+    tail = [0]*(64-len(datalen)) + datalen
     padding = [1] + [0]*(511-((len(msg)+len(tail)) % 512))
-    msg += padding
-    msg += tail
+    msg += (padding + tail)
     
     ctx = None
     for i in range(0, len(msg), 512):
         block = msg[i:i+512] 
-        words = [UBitArray32(block[i:i+32]) for i in range(0, 512, 32)]
-        words = schedule(words)
-        ctx = compress(words, ctx)
-    
-    return "".join(x.tohex() for x in ctx)
+        wds = [UBitArray32(block[i:i+32]) for i in range(0, 512, 32)]
+        wds = schedule(wds)
+        # reset context for next block
+        ctx = compress(wds, ctx)
 
-if __name__ == "__main__":
-    msg = "abc"*127
-    import sys
-    result = sha256(msg)
+    return "".join(x.tohex() for x in ctx)
