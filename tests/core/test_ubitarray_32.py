@@ -4,7 +4,6 @@ import pytest
 def test___init___with_greater_than_32_bits():
     # UBitArray32.__init__  should remove leadings bits if length of input
     # bits exceeds 32
-
     result = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0])
     expected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
     assert result.bits == expected
@@ -44,8 +43,8 @@ def test_from_int_with_positive_int():
     assert result.bits == expected
 
 def test_from_int_with_negative_int():
-    result = UBitArray32.fromint(-24)
     # -24 (signed) -> 4292967272 (unsigned)
+    result = UBitArray32.fromint(-24)
     expected = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0]
     assert result.bits == expected
 
