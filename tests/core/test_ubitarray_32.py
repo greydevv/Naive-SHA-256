@@ -1,4 +1,4 @@
-from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority
+from sha256.core.ubitarray_32 import UBitArray32, xor, choice, majority, lsig0, lsig1, usig0, usig1
 import pytest
 
 def test___init___exceeding_max_value():
@@ -200,21 +200,25 @@ def test_majority():
     assert result.bits == expected
 
 def test_lsig0():
-    pass
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+    result = lsig0(a)
+    expected = [1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0]
+    assert result.bits == expected
 
 def test_lsig1():
-    pass
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+    result = lsig1(a)
+    expected = [0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1]
+    assert result.bits == expected
 
 def test_usig0():
-    pass
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+    result = usig0(a)
+    expected = [0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0]
+    assert result.bits == expected
 
 def test_usig1():
-    pass
-
-
-
-
-
-
-
-
+    a = UBitArray32([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+    result = usig1(a)
+    expected = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,0,0]
+    assert result.bits == expected

@@ -19,28 +19,24 @@ def majority(a, b, c):
     return UBitArray32(result)
 
 def lsig0(bitarray):
-    """TODO: add testing"""
     a = bitarray.rotr(7)
     b = bitarray.rotr(18)
     c = bitarray.rshift(3)
     return xor(a,b,c)
 
 def lsig1(bitarray):
-    """TODO: add testing"""
     a = bitarray.rotr(17)
     b = bitarray.rotr(19)
     c = bitarray.rshift(10)
     return xor(a,b,c)
 
 def usig0(bitarray):
-    """TODO: add testing"""
     a = bitarray.rotr(2)
     b = bitarray.rotr(13)
     c = bitarray.rotr(22)
     return xor(a,b,c)
 
 def usig1(bitarray):
-    """TODO: add testing"""
     a = bitarray.rotr(6)
     b = bitarray.rotr(11)
     c = bitarray.rotr(25)
