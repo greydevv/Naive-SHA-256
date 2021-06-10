@@ -198,3 +198,23 @@ def test_majority():
     result = majority(a,b,c)
     expected = [0,0,0,0,1,0,0,0,1,1,1,0,0,1,0,1,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1]
     assert result.bits == expected
+
+def test_lsig0():
+    pass
+
+def test_lsig1():
+    pass
+
+def test_usig0():
+    pass
+
+def test_usig1():
+    pass
+
+
+
+
+
+
+
+

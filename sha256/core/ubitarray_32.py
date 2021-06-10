@@ -14,9 +14,37 @@ def choice(a, b, c):
 
 def majority(a, b, c):
     result = []
-    for bits in zip(*bit_arrs):
+    for bits in zip(a,b,c):
         result.append(max(bits, key=bits.count))
     return UBitArray32(result)
+
+def lsig0(bitarray):
+    """TODO: add testing"""
+    a = bitarray.rotr(7)
+    b = bitarray.rotr(18)
+    c = bitarray.rshift(3)
+    return xor(a,b,c)
+
+def lsig1(bitarray):
+    """TODO: add testing"""
+    a = bitarray.rotr(17)
+    b = bitarray.rotr(19)
+    c = bitarray.rshift(10)
+    return xor(a,b,c)
+
+def usig0(bitarray):
+    """TODO: add testing"""
+    a = bitarray.rotr(2)
+    b = bitarray.rotr(13)
+    c = bitarray.rotr(22)
+    return xor(a,b,c)
+
+def usig1(bitarray):
+    """TODO: add testing"""
+    a = bitarray.rotr(6)
+    b = bitarray.rotr(11)
+    c = bitarray.rotr(25)
+    return xor(a,b,c)
 
 class UBitArray32:
     def __init__(self, bits):
