@@ -41,24 +41,22 @@ def sha256(data):
     msg = []
     for ch in data:
         _ord = ASCII[ch]
-        """TODO: possibly deprecate prepad() and build in 8 bits to binary() by default"""
         ch_bits = prepad(binary(_ord), to=8)
         msg.extend(ch_bits)
     
     datalen = binary(len(msg)) # what to do if the length of this is > 64 bits?
+    if len(datalen) > 64:
+        raise ValueError("input is too large")
+    
     tail = [0]*(64-len(datalen)) + datalen # compose length of data in bits (64 bits)
     padding = [1] + [0]*(511-((len(msg)+len(tail)) % 512))
     msg += padding
     msg += tail
     
-    blocks = []
-    for i in range(0, len(msg), 512):
-        blocks.append(msg[i:i+512])
-    
     ctx = None
-    for b in blocks:
-        # create 32-bit words from 512-bit chunks
-        words = [UBitArray32(b[i:i+32]) for i in range(0, 512, 32)]
+    for i in range(0, len(msg), 512):
+        block = msg[i:i+512] 
+        words = [UBitArray32(block[i:i+32]) for i in range(0, 512, 32)]
         words = schedule(words)
         ctx = compress(words, ctx)
     
