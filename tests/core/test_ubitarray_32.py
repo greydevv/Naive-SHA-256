@@ -49,7 +49,7 @@ def test_from_int_with_negative_int():
     assert result.bits == expected
 
 def test_from_int_exceeding_max_value():
-    with pytest.raises(ValueError, match="maximum value of 4294967295 exceeded"):
+    with pytest.raises(ValueError, match="maximum value of \\(2\\*\\*32\\)-1, or 4294967295, exceeded"):
         UBitArray32.fromint(4294967296)
 
 def test_toint():
