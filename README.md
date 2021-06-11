@@ -7,7 +7,7 @@ This implementation of **SHA-256** is *not* meant for use in cryptographically s
 
 ### Goal
 
-Not only was this project meant for research on hashing algorithms, but also for research and practice in manipulating bits in binary sequences. There are no uses of builtins such as `bin`, `ord`, `hex`, or any others that may assist in converting between strings, integers, and binary representations. Instead, they are implemented from scratch and can be found in the [`sha256/core`](https://github.com/greysonDEV/SHA-256/blob/main/LICENSE)
+Not only was this project meant for research on hashing algorithms, but also for research and practice in manipulating bits in binary sequences. There are no uses of builtins such as `bin`, `ord`, `hex`, or any others that may assist in converting between strings, integers, and binary representations. Instead, they are implemented from scratch and can be found in the [`sha256/core`](https://github.com/greysonDEV/SHA-256/tree/main/sha256/core) directory.
 
 
 ### Documentation
