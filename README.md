@@ -19,5 +19,5 @@ Aside from the implementation of **SHA-256**, this repository also includes many
     │   └── ubitarray_32.py
     └── sha256.py
 ```
-In `sha256/core/ubitarray_32.py`, `UBitArray32` is defined. This class is the heart of the binary computations that are used by **SHA-256**. Although it may not be obvious by looking at the `SHA256` method, this class is relied upon heavily.\
-Similarly, in `sha256/core/bitops.py`, many methods, such as `binary` are defined. These methods are useful in both the `SHA256` method and `UBitArray32`.
+In [`sha256/core/ubitarray_32.py`](https://github.com/greysonDEV/SHA-256/blob/main/sha256/core/ubitarray_32.py), `UBitArray32` is defined. This class is the heart of the binary computations that are used by **SHA-256**. Although it may not be obvious by looking at the `SHA256` method, this class is relied upon heavily.\
+Similarly, in [`sha256/core/bitops.py`](https://github.com/greysonDEV/SHA-256/blob/main/sha256/core/bitops.py), many methods, such as `binary` are defined. These methods are useful in both the `SHA256` method and `UBitArray32`.
