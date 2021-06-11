@@ -1,7 +1,7 @@
 # ============================================================================ #
 # Author: Greyson Murray (greyson.murray@gmail.com)
 #
-# Description: This file defines tables of both hexadecimal and ASCII values.
+# Description: This file conatins tables of both hexadecimal and ASCII values.
 #
 # LICENSE: MIT
 # ============================================================================ #
@@ -25,6 +25,8 @@ HEX = {
     15: "f",
 }
 
+# not a complete table; it only contains values from 'string.printable' from the
+# 'string' module
 ASCII = {
     "\t": 9,
     "\n": 10,

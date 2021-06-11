@@ -1,7 +1,7 @@
 # ============================================================================ #
 # Author: Greyson Murray (greyson.murray@gmail.com)
 #
-# Description: This file defines various methods responsible for binary/bit
+# Description: This file contains various methods responsible for binary/bit
 #                  conversions/computations.
 #
 # LICENSE: MIT

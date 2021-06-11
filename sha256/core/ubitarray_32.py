@@ -1,7 +1,7 @@
 # ============================================================================ #
 # Author: Greyson Murray (greyson.murray@gmail.com)
 #
-# Description: This file defines UBitArray32 and other auxiliary methods that
+# Description: This file contains UBitArray32 and other auxiliary methods that
 #                  deal with various bit computations. 
 #
 # LICENSE: MIT

@@ -1,7 +1,7 @@
 # ============================================================================ #
 # Author: Greyson Murray (greyson.murray@gmail.com)
 #
-# Description: This file defines SHA256 and other auxiliary methods that deal
+# Description: This file contains SHA256 and other auxiliary methods that deal
 #                   with the computation of hexadecimal digests of data.
 #
 # LICENSE: MIT
