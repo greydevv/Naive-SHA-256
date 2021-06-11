@@ -7,12 +7,13 @@
 # LICENSE: MIT
 # ============================================================================ #
 
+from typing import List, Tuple
 from sha256.core.ubitarray_32 import UBitArray32, lsig0, lsig1, usig0, usig1, ch, maj
 from sha256.core.bitops import binary, prepad
 from sha256.const import H, K
 from sha256.const.tables import ASCII
 
-def schedule(wds):
+def schedule(wds: List[UBitArray32]) -> List[UBitArray32]:
     """
     Expands 16 words (each 32-bit) into a 64-word message schedule for
     compression. Making use of both 'σ0' and 'σ1' (lowercase sigma rotational 
@@ -32,7 +33,7 @@ def schedule(wds):
 
     return wds
 
-def compress(wds, ctx=None):
+def compress(wds: List[UBitArray32], ctx: Tuple[UBitArray32]=None) -> Tuple[UBitArray32]:
     """
     Compresses each word into eight state registers (a, b, c, d, e, f, g, h).
     New state is computed using '∑0' and '∑1' (uppercase sigma rotational
@@ -77,7 +78,7 @@ def compress(wds, ctx=None):
 
     return a,b,c,d,e,f,g,h
 
-def SHA256(data):
+def SHA256(data: str) -> str:
     """
     '256-bit Secure Hash Algorithm' (SHA-256)
 

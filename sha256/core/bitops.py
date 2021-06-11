@@ -9,8 +9,9 @@
 
 from sha256.const.tables import ASCII
 from sha256.const import H, K
+from typing import List
 
-def binary(n):
+def binary(n: int) -> List[int]:
     """
     Converts an integer into its unsigned binary representation. If a negative
     number is input, the binary representation of its positive counterpart
@@ -36,7 +37,7 @@ def binary(n):
     
     return bits[::-1]
 
-def prepad(bits, to=32):
+def prepad(bits: List[int], to: int=32) -> List[int]:
     """
     Pads a list of bits to a certain length factor.
 
@@ -59,7 +60,7 @@ def prepad(bits, to=32):
     
     return bits
 
-def add(a,b):
+def add(a: List[int], b: List[int]) -> List[int]:
     """
     Adds two lists of bits together. When summing bits, they are added from
     left to right. For that reason, a reverse range is used to iterate through
@@ -93,7 +94,7 @@ def add(a,b):
 
     return result[::-1]
 
-def twos(bits):
+def twos(bits: List[int]) -> List[int]:
     """
     Converts a list of bits into its Two's Complement representation. The bits
     are negated (flipped) and the list of bits is then added with 1.
