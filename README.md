@@ -2,8 +2,7 @@
 
 A purely Python, dependency-free implementation of the *256-bit Secure Hash Algorithm*, more commonly known as **SHA-256**. 
 
-This implementation of **SHA-256** is *not* meant for use in cryptographically secure programs. It is simply the most basic implementation of **SHA-256** written purely in python.<br>
-Furthermore, it is not the most efficient implementation, either. This is due to the fact that this program doesn't actually work with actual bits; instead, a custom data structure, `UBitArray32` is used to store and manipulate a Python `list` filled with `0`s and `1`s to represent bits.
+This implementation of **SHA-256** is *not* meant for use in cryptographically secure programs. It is simply the most basic implementation of **SHA-256** written purely in python. Furthermore, it is not the most efficient implementation, either. This is due to the fact that this program doesn't  work with actual bits; instead, a custom data structure, `UBitArray32` is used to store and manipulate a Python `list` filled with `0`s and `1`s to represent bits.
 
 
 ### Goal
